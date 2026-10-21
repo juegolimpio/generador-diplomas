@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="es-UY">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f5f7fb">
+  <meta name="description" content="Creá diplomas individuales o para grupos con tus plantillas o diseños prediseñados. Gratis, sin registro y sin enviar tus archivos a un servidor.">
+  <title>Generador de Diplomas · Aplicación independiente</title>
+  <style>
+    :root{color-scheme:light;--ink:#14263b;--muted:#55657a;--line:#dae3ec;--surface:#fff;--page:#f5f7fb;--accent:#086c79;--accent-2:#e5f5f5;--shadow:0 15px 44px rgba(20,38,59,.08);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--page);color:var(--ink);line-height:1.45}
+    button,input,textarea,select{font:inherit}
+    button{cursor:pointer}
+    button:disabled{cursor:not-allowed;opacity:.5}
+    :focus-visible{outline:3px solid #67bdc9;outline-offset:3px}
+    header{background:var(--surface);border-bottom:1px solid var(--line)}
+    .head-inner{max-width:1450px;margin:auto;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:15px}
+    .brand{display:flex;align-items:center;gap:13px}
+    .brand-icon{display:grid;place-items:center;width:44px;height:44px;border-radius:13px;color:#fff;background:linear-gradient(135deg,#087d86,#173d78);font-size:25px}
+    .brand strong{font-size:1.1rem;display:block;line-height:1.2}
+    .brand small{color:var(--muted);font-size:.78rem}
+    .tag{color:#1c6c64;background:#e7f5ee;border-radius:99px;padding:7px 11px;font-weight:700;font-size:.77rem}
+    .app{max-width:1450px;margin:auto;padding:28px 24px 65px}
+    .intro{margin-bottom:24px;display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:end}
+    .intro h1{font-size:clamp(1.65rem,3vw,2.25rem);letter-spacing:-.045em;margin:0 0 4px;line-height:1.2}
+    .intro p{margin:0;color:var(--muted);max-width:760px}
+    .privacy{display:flex;gap:7px;align-items:center;font-size:.8rem;color:#3d665e}
+    .workspace{display:grid;grid-template-columns:minmax(350px,480px) minmax(0,1fr);gap:22px;align-items:start}
+    .panel{background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:17px;overflow:hidden}
+    .panel-content{padding:22px}
+    .panel + .panel{margin-top:16px}
+    .section-title{display:flex;align-items:center;gap:9px;margin:0 0 13px;font-size:1.05rem}
+    .step{font-size:.79rem;font-weight:800;color:#fff;background:#087787;border-radius:7px;display:grid;place-items:center;width:25px;height:25px;flex:none}
+    .subtle{color:var(--muted);font-size:.85rem;margin:0 0 13px}
+    .modes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .mode{background:white;text-align:left;border:1.5px solid var(--line);border-radius:12px;padding:13px 12px;min-height:114px;display:flex;flex-direction:column;gap:7px;transition:border-color .15s,background-color .15s}
+    .mode:hover,.template-btn:hover{border-color:#72b8c4}
+    .mode[aria-pressed=true],.template-btn[aria-pressed=true]{border-color:#087787;background:#effafa;box-shadow:inset 0 0 0 1px #087787}
+    .mode-icon{font-size:1.3rem}
+    .mode strong{font-size:.91rem}
+    .mode small{font-size:.76rem;color:var(--muted)}
+    .hidden{display:none!important}
+    .divider{border:0;border-top:1px solid var(--line);margin:22px 0}
+    .template-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .template-btn{border-radius:11px;background:#fff;border:1.5px solid var(--line);padding:7px;text-align:left;overflow:hidden;transition:border-color .15s}
+    .template-btn canvas{display:block;width:100%;aspect-ratio:1200/848;background:white;border-radius:5px}
+    .template-btn span{display:block;font-size:.82rem;font-weight:700;padding:8px 3px 3px}
+    .field{display:flex;flex-direction:column;gap:6px;margin:0 0 13px}
+    .field label,.field-label{font-size:.82rem;font-weight:720}
+    .field input[type=text],.field textarea,.field select,.file-field,select{width:100%;border:1px solid #cad7e3;border-radius:9px;background:white;padding:10px 11px;color:var(--ink);font-size:.9rem;min-width:0}
+    .field textarea{resize:vertical;min-height:82px;line-height:1.5}
+    .field input:focus,.field textarea:focus,.field select:focus{border-color:#087787;outline:2px solid #bee6e7;outline-offset:0}
+    .fields-two{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+    .fields-two .field{min-width:0}
+    details{border:1px solid var(--line);border-radius:11px;padding:12px 13px;margin:10px 0}
+    details summary{font-weight:750;font-size:.88rem;cursor:pointer;user-select:none}
+    details[open] summary{margin-bottom:13px}
+    .toggle-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .check-label{display:flex;align-items:center;gap:7px;color:#33465a;font-size:.8rem;cursor:pointer}
+    .check-label input{accent-color:#087787;width:15px;height:15px}
+    .file-row{display:grid;grid-template-columns:1fr auto;gap:7px;align-items:center;margin:0 0 12px}
+    .file-row input{font-size:.8rem;min-width:0;width:100%;color:var(--muted)}
+    .file-row input::file-selector-button{border:1px solid var(--line);padding:7px 9px;border-radius:6px;background:#f6f9fc;color:var(--ink);margin-right:8px;cursor:pointer}
+    .file-row button{border:1px solid var(--line);border-radius:7px;background:#fff;padding:7px;font-size:.75rem}
+    .upload-drop{display:grid;gap:12px;padding:20px;text-align:center;border:2px dashed #9ab8c4;border-radius:13px;background:#f8fcfd;margin:13px 0}
+    .upload-drop .glyph{font-size:2rem}
+    .upload-drop strong{display:block;font-size:.93rem}
+    .upload-drop input{max-width:100%;font-size:.83rem}
+    .upload-drop small{font-size:.78rem;color:var(--muted)}
+    .hint{font-size:.78rem;color:var(--muted);line-height:1.5;margin:6px 0}
+    .range-row{display:flex;gap:10px;align-items:center}
+    .range-row input[type=range]{flex:1;width:100%;accent-color:#087787}
+    .range-row output{min-width:46px;text-align:right;font-weight:700;font-size:.79rem}
+    input[type=color]{width:100%;height:40px;border:1px solid #cad7e3;border-radius:8px;background:#fff;padding:4px}
+    .countline{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 0 13px;color:var(--muted);font-size:.86rem}
+    .count{padding:5px 10px;color:#087079;background:#eaf7f8;border-radius:8px;font-weight:750;font-variant-numeric:tabular-nums}
+    .preview-panel{position:sticky;top:15px}
+    .preview-top{padding:17px 20px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:9px}
+    .preview-top strong{font-size:1.02rem}
+    .preview-top small{color:var(--muted);display:block;font-size:.76rem}
+    .preview-top select{width:auto;max-width:260px;min-width:150px;font-size:.8rem;padding:8px}
+    .preview-inner{padding:21px;background:#eaf0f5}
+    .canvas-frame{background:#fff;box-shadow:0 7px 24px rgba(19,42,66,.15);width:100%;margin:auto;aspect-ratio:1200/848}
+    #preview{display:block;width:100%;height:100%;touch-action:pan-y}
+    .preview-caption{margin:10px 0 0;color:#55657a;font-size:.74rem;text-align:center}
+    .actions{display:grid;gap:9px;padding:18px 20px}
+    .primary,.secondary{border-radius:10px;padding:12px 15px;font-weight:750;text-align:center;border:1px solid transparent}
+    .primary{background:#086c79;color:#fff}
+    .primary:not(:disabled):hover{background:#075664}
+    .secondary{background:#fff;color:#17374a;border-color:#bdcfdc}
+    .secondary:hover:not(:disabled){background:#f3f9fa}
+    .actions-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+    .status{border-radius:9px;padding:9px 11px;font-size:.8rem;display:none}
+    .status.visible{display:block;background:#eaf7ef;color:#27573d}
+    .status.error{background:#fff1ee;color:#963c28}
+    .footnote{font-size:.76rem;color:var(--muted);padding:0 20px 18px;margin:0}
+    .footer{margin-top:28px;color:#56697b;text-align:center;font-size:.8rem}
+    .loading-bar{height:4px;background:#cbdde0;border-radius:20px;overflow:hidden;display:none}
+    .loading-bar.visible{display:block}
+    .loading-bar span{display:block;width:0;height:100%;background:#087787;transition:width .1s}
+    #print-root{display:none}
+    @media(max-width:1050px){.workspace{grid-template-columns:minmax(320px,430px) minmax(0,1fr)}.app{padding:22px 15px 40px}.preview-inner{padding:13px}}
+    @media(max-width:800px){.workspace{grid-template-columns:1fr}.preview-panel{position:static}.head-inner{padding:15px}.app{padding:19px 13px 40px}.intro{margin-bottom:17px}.preview-panel{grid-row:auto}.preview-inner{padding:14px}.panel-content{padding:17px}.preview-top{padding:14px 16px}.actions{padding:15px}}
+    @media(max-width:380px){.fields-two{grid-template-columns:1fr}.brand strong{font-size:.98rem}.tag{display:none}.mode{padding:11px 9px}.actions-grid{grid-template-columns:1fr}}
+    @page{size:A4 landscape;margin:0}
+    @media print{
+      html,body{margin:0!important;padding:0!important;background:white!important;width:297mm!important}
+      header,main,.footer{display:none!important}
+      #print-root{display:block!important;margin:0!important;padding:0!important}
+      #print-root .print-page{margin:0!important;padding:0!important;width:297mm;height:210mm;overflow:hidden;break-inside:avoid;page-break-inside:avoid;break-after:page;page-break-after:always;display:block}
+      #print-root .print-page:last-child{break-after:auto;page-break-after:auto}
+      #print-root img{width:297mm;height:210mm;object-fit:fill;display:block;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="head-inner">
+    <div class="brand"><div class="brand-icon" aria-hidden="true">🏅</div><div><strong>Generador de Diplomas</strong><small>Aplicación independiente · Versión 1.1</small></div></div>
+    <span class="tag">Sin registro · Gratis</span>
+  </div>
+</header>
+<main class="app">
+  <section class="intro"><div><h1>Creá diplomas en pocos pasos</h1><p>Usá tu diseño de Canva o elegí una plantilla. Personalizá uno o muchos diplomas, con muestras en español.</p></div><div class="privacy">🔒 Las imágenes y los nombres se procesan en tu dispositivo.</div></section>
+  <div class="workspace">
+    <div class="editor-column">
+      <section class="panel"><div class="panel-content">
+        <h2 class="section-title"><span class="step">1</span> Elegí cómo empezar</h2>
+        <div class="modes" role="group" aria-label="Modo de creación">
+          <button class="mode" id="mode-template" type="button" aria-pressed="true"><span class="mode-icon" aria-hidden="true">🎨</span><strong>Crear con una plantilla</strong><small>Elegí un diseño y personalizalo.</small></button>
+          <button class="mode" id="mode-upload" type="button" aria-pressed="false"><span class="mode-icon" aria-hidden="true">📁</span><strong>Usar mi propio diseño</strong><small>Subí una imagen hecha en Canva.</small></button>
+        </div>
+        <div id="templates-section">
+          <hr class="divider">
+          <h3 class="section-title"><span class="step">2</span> Seleccioná una plantilla</h3>
+          <div class="template-grid" id="template-grid">
+            <button type="button" class="template-btn" data-template="voleibol" aria-pressed="true"><canvas aria-hidden="true" width="384" height="271"></canvas><span>🏐 Vóleibol</span></button>
+            <button type="button" class="template-btn" data-template="futbol" aria-pressed="false"><canvas aria-hidden="true" width="384" height="271"></canvas><span>⚽ Fútbol</span></button>
+            <button type="button" class="template-btn" data-template="institucional" aria-pressed="false"><canvas aria-hidden="true" width="384" height="271"></canvas><span>🏛️ Institucional</span></button>
+            <button type="button" class="template-btn" data-template="general" aria-pressed="false"><canvas aria-hidden="true" width="384" height="271"></canvas><span>✨ Participación</span></button>
+          </div>
+        </div>
+        <div id="upload-section" class="hidden">
+          <hr class="divider">
+          <h3 class="section-title"><span class="step">2</span> Subí tu diseño</h3>
+          <div class="upload-drop" id="dropzone"><div class="glyph" aria-hidden="true">🖼️</div><div><strong>Seleccioná la imagen de fondo</strong><small>Podés usar una plantilla que ya tenga logos y firmas.</small></div><input id="background-file" type="file" accept="image/png,image/jpeg,image/webp" aria-label="Subir imagen de fondo"><small>PNG, JPG o WEBP · Hasta 10 MB · Recomendado: A4 horizontal</small></div>
+          <div class="field"><label for="image-fit">Ajuste del fondo</label><select id="image-fit"><option value="cover">Cubrir todo (puede recortar bordes)</option><option value="contain">Mostrar completo (puede dejar márgenes)</option></select></div>
+          <p class="hint">Si tu plantilla ya incluye título, fecha y firmas, podés dejar visible únicamente el nombre.</p>
+        </div>
+      </div></section>
+      <section class="panel"><div class="panel-content">
+        <h2 class="section-title"><span class="step">3</span> Escribí los datos</h2>
+        <div class="field"><label for="institution">Institución u organización</label><input id="institution" type="text" maxlength="110" value="Centro educativo"></div>
+        <div class="field"><label for="title-text">Título del diploma</label><input id="title-text" type="text" maxlength="90" value="DIPLOMA DE PARTICIPACIÓN"></div>
+        <div class="field"><label for="intro-text">Texto previo al nombre</label><input id="intro-text" type="text" maxlength="180" value="Se otorga el presente diploma a"></div>
+        <div class="field"><label for="description">Motivo o reconocimiento</label><textarea id="description" maxlength="280" rows="2">Por su participación en el campeonato de vóleibol.</textarea></div>
+        <div class="field"><label for="date-text">Lugar y fecha</label><input id="date-text" type="text" maxlength="100" value="Montevideo, octubre de 2026"></div>
+        <details id="visibility-details"><summary>Elegir qué textos aparecen</summary><div class="toggle-grid">
+          <label class="check-label"><input type="checkbox" data-visibility="institution" checked> Institución</label>
+          <label class="check-label"><input type="checkbox" data-visibility="title" checked> Título</label>
+          <label class="check-label"><input type="checkbox" data-visibility="intro" checked> Texto previo</label>
+          <label class="check-label"><input type="checkbox" data-visibility="description" checked> Reconocimiento</label>
+          <label class="check-label"><input type="checkbox" data-visibility="date" checked> Lugar y fecha</label>
+          <label class="check-label"><input type="checkbox" data-visibility="signatures" checked> Firmas y cargos</label>
+        </div></details>
+        <details><summary>Agregar logo y firmas (opcional)</summary>
+          <p class="hint">Solo se usan para crear tus diplomas. Si el fondo ya tiene firmas, no hace falta cargarlas otra vez.</p>
+          <div class="field"><label for="logo-file">Logotipo</label><div class="file-row"><input id="logo-file" type="file" accept="image/png,image/jpeg,image/webp"><button type="button" data-clear="logo" aria-label="Quitar logotipo">Quitar</button></div></div>
+          <div class="field"><label for="signature1-file">Firma 1</label><div class="file-row"><input id="signature1-file" type="file" accept="image/png,image/jpeg,image/webp"><button type="button" data-clear="signature1" aria-label="Quitar firma 1">Quitar</button></div></div>
+          <div class="field"><label for="signer1">Cargo o nombre bajo la firma 1</label><input id="signer1" type="text" maxlength="75" value="Dirección"></div>
+          <div class="field"><label for="signature2-file">Firma 2</label><div class="file-row"><input id="signature2-file" type="file" accept="image/png,image/jpeg,image/webp"><button type="button" data-clear="signature2" aria-label="Quitar firma 2">Quitar</button></div></div>
+          <div class="field"><label for="signer2">Cargo o nombre bajo la firma 2</label><input id="signer2" type="text" maxlength="75" value="Docente responsable"></div>
+        </details>
+        <details><summary>Personalizar el nombre</summary>
+          <div class="fields-two"><div class="field"><label for="name-font">Tipo de letra</label><select id="name-font"><option value="Georgia">Clásica</option><option value="Arial">Moderna</option></select></div><div class="field"><label for="name-color">Color del nombre</label><input type="color" id="name-color" value="#173e61"></div></div>
+          <div class="field"><label for="name-size">Tamaño del nombre</label><div class="range-row"><input id="name-size" type="range" min="38" max="100" value="72"><output id="name-size-val" for="name-size">72</output></div></div>
+          <div class="field"><label for="name-y">Posición vertical del nombre</label><div class="range-row"><input id="name-y" type="range" min="355" max="490" value="438"><output id="name-y-val" for="name-y">438</output></div></div>
+          <label class="check-label"><input id="name-plate" type="checkbox"> Fondo claro detrás del nombre</label>
+        </details>
+      </div></section>
+      <section class="panel"><div class="panel-content">
+        <h2 class="section-title"><span class="step">4</span> Agregá los nombres</h2>
+        <p class="subtle">Escribí un nombre por línea. Para un diploma individual, escribí uno solo. También podés pegar una lista.</p>
+        <div class="field"><label for="names">Participantes o personas reconocidas</label><textarea id="names" rows="5" spellcheck="false" placeholder="Un nombre por línea">Sofía Martínez
+Joaquín Pereira
+Valentina Rodríguez</textarea></div>
+        <div class="countline"><span>Diplomas que se van a generar</span><span class="count" id="name-count" aria-live="polite">3</span></div>
+        <p class="hint">Límite inicial: 100 diplomas por tanda. No se guardan los nombres en el servidor.</p>
+      </div></section>
+    </div>
+    <aside class="panel preview-panel" aria-label="Vista previa y descarga">
+      <div class="preview-top"><div><strong>Vista previa del diploma</strong><small>Formato A4 horizontal</small></div><div class="field" style="margin:0"><label for="preview-person">Ver participante</label><select id="preview-person" aria-label="Elegir participante para la vista previa"></select></div></div>
+      <div class="preview-inner"><div class="canvas-frame"><canvas id="preview" width="1200" height="848" role="img" aria-label="Vista previa del diploma con los datos ingresados"></canvas></div><p class="preview-caption">Los datos que editás se reflejan inmediatamente en la muestra.</p></div>
+      <div class="actions"><div class="loading-bar" id="progress-track"><span id="progress-bar"></span></div><div class="status" role="status" aria-live="polite" id="status"></div>
+        <button id="print-btn" type="button" class="primary">🖨️ PDF único · todos los diplomas</button>
+        <button id="pdf-one-btn" type="button" class="secondary">📄 Descargar PDF del participante seleccionado</button>
+        <button id="pdf-zip-btn" type="button" class="secondary">📦 Descargar PDFs individuales (ZIP)</button>
+        <div class="actions-grid"><button id="png-btn" type="button" class="secondary">⬇️ Descargar imagen</button><button id="reset-btn" type="button" class="secondary">↺ Reiniciar</button></div>
+      </div>
+      <p class="footnote"><strong>PDF único:</strong> abre la impresión; elegí «Guardar como PDF» (A4 horizontal, márgenes «Ninguno»). <strong>PDF individual:</strong> descarga solo el participante elegido en «Ver participante». <strong>ZIP:</strong> descarga un único archivo comprimido que contiene un PDF diferente por participante; extraelo para compartirlos por WhatsApp. También podés descargar una imagen PNG individual.</p>
+    </aside>
+  </div>
+  <div class="footer">Generador de Diplomas · Versión 1.1 · Funciona sin cuentas y sin conexión una vez descargado el archivo HTML.</div>
+</main>
+<div id="print-root" aria-hidden="true"></div>
+<script>
+(()=>{
+  'use strict';
+  const WIDTH=1200, HEIGHT=848, MAX_NAMES=100;
+  const $=id=>document.getElementById(id);
+  const templateDefaults={
+    voleibol:{title:'DIPLOMA DE PARTICIPACIÓN',intro:'Se otorga el presente diploma a',description:'Por su participación en el campeonato de vóleibol.'},
+    futbol:{title:'DIPLOMA DE PARTICIPACIÓN',intro:'Se otorga el presente diploma a',description:'Por su participación en el campeonato de fútbol.'},
+    institucional:{title:'DIPLOMA DE RECONOCIMIENTO',intro:'Se otorga el presente reconocimiento a',description:'Por su compromiso y participación en la actividad institucional.'},
+    general:{title:'DIPLOMA DE PARTICIPACIÓN',intro:'Se otorga el presente diploma a',description:'Por su participación en las actividades propuestas.'}
+  };
+  const state={mode:'template',template:'voleibol',images:{background:null,logo:null,signature1:null,signature2:null},nameIndex:0,busy:false};
+  const visKeys=['institution','title','intro','description','date','signatures'];
+  const inputIds=['institution','title-text','intro-text','description','date-text','signer1','signer2','name-font','name-color','name-size','name-y','name-plate','image-fit'];
+  let renderScheduled=false;
+  const initial={};
+  for(const id of [...inputIds,'names']){const el=$(id);initial[id]=el.type==='checkbox'?el.checked:el.value;}
+  function getNames(){return $('names').value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);}
+  function inputs(){return {
+    institution:$('institution').value.trim(),title:$('title-text').value.trim(),intro:$('intro-text').value.trim(),
+    description:$('description').value.trim(),date:$('date-text').value.trim(),signer1:$('signer1').value.trim(),signer2:$('signer2').value.trim(),
+    font:$('name-font').value,size:Number($('name-size').value),nameY:Number($('name-y').value),color:$('name-color').value,
+    plate:$('name-plate').checked,fit:$('image-fit').value,
+    vis:Object.fromEntries(visKeys.map(k=>[k,document.querySelector('[data-visibility="'+k+'"]').checked]))
+  };}
+  function setStatus(msg, error=false){const s=$('status');s.textContent=msg;s.classList.toggle('visible',!!msg);s.classList.toggle('error',!!msg&&error);}
+  function syncState(){const names=getNames();const available=state.mode==='template'||!!state.images.background;
+    $('name-count').textContent=String(names.length);
+    const p=$('preview-person');const oldIndex=state.nameIndex;p.replaceChildren();
+    if(!names.length){const opt=document.createElement('option');opt.textContent='Sin participantes';opt.value='0';p.append(opt);state.nameIndex=0;}
+    else{state.nameIndex=Math.min(oldIndex,names.length-1);names.forEach((n,i)=>{const opt=document.createElement('option');opt.value=String(i);opt.textContent=(i+1)+'. '+n;p.append(opt);});p.value=String(state.nameIndex);}
+    $('print-btn').disabled=state.busy||!names.length||names.length>MAX_NAMES||!available;
+    $('pdf-zip-btn').disabled=state.busy||!names.length||names.length>MAX_NAMES||!available;
+    $('pdf-one-btn').disabled=state.busy||!names.length||!available;
+    $('png-btn').disabled=state.busy||!names.length||!available;
+    $('reset-btn').disabled=state.busy;
+    $('print-btn').textContent=state.busy?'Preparando diplomas…':'🖨️ PDF único · '+(names.length===1?'1 diploma':names.length+' diplomas');
+    $('name-size-val').textContent=$('name-size').value;
+    $('name-y-val').textContent=$('name-y').value;
+    if(!state.busy&&names.length>MAX_NAMES)setStatus('La primera versión permite hasta 100 nombres por tanda. Dividí la lista para exportar.',true);
+    else if($('status').dataset.limit==='true'){setStatus('');$('status').dataset.limit='false';}
+    scheduleRender();
+  }
+  function scheduleRender(){if(renderScheduled)return;renderScheduled=true;requestAnimationFrame(()=>{renderScheduled=false;drawCanvas($('preview'),getNames()[state.nameIndex]||'Tu nombre aquí',inputs());});}
+  function setMode(mode){state.mode=mode;const custom=mode==='upload';$('mode-template').setAttribute('aria-pressed',String(!custom));$('mode-upload').setAttribute('aria-pressed',String(custom));$('templates-section').classList.toggle('hidden',custom);$('upload-section').classList.toggle('hidden',!custom);
+    for(const k of visKeys){document.querySelector('[data-visibility="'+k+'"]').checked=!custom;}
+    $('name-plate').checked=custom;
+    $('visibility-details').open=custom;
+    setStatus('');syncState();
+  }
+  function chooseTemplate(id){state.template=id;document.querySelectorAll('.template-btn').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.template===id)));
+    $('title-text').value=templateDefaults[id].title;$('intro-text').value=templateDefaults[id].intro;$('description').value=templateDefaults[id].description;
+    setStatus('');syncState();
+  }
+  function imageFromFile(file){return new Promise((resolve,reject)=>{const url=URL.createObjectURL(file);const img=new Image();img.onload=()=>{URL.revokeObjectURL(url);resolve(img);};img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('No se pudo leer la imagen.'))};img.src=url;});}
+  async function loadImage(id,file){if(!file)return;const key=id==='background-file'?'background':id==='logo-file'?'logo':id==='signature1-file'?'signature1':'signature2';
+    if(!['image/png','image/jpeg','image/webp'].includes(file.type)){setStatus('Formato no admitido. Usá JPG, PNG o WEBP.',true);$(id).value='';return;}
+    if(file.size>10*1024*1024){setStatus('La imagen supera 10 MB. Elegí una más liviana.',true);$(id).value='';return;}
+    try{const img=await imageFromFile(file);if(img.naturalWidth<1||img.naturalHeight<1||img.naturalWidth>12000||img.naturalHeight>12000)throw Error('Dimensiones de imagen no admitidas.');state.images[key]=img;setStatus('Imagen incorporada. Se mantiene únicamente en este dispositivo.');syncState();}
+    catch(err){setStatus(err.message||'No se pudo abrir la imagen.',true);$(id).value='';}
+  }
+  function drawCanvas(canvas,name,opt,override={}){const ctx=canvas.getContext('2d');if(!ctx)return;
+    const sx=canvas.width/WIDTH,sy=canvas.height/HEIGHT;ctx.save();ctx.setTransform(sx,0,0,sy,0,0);ctx.clearRect(0,0,WIDTH,HEIGHT);
+    const mode=override.mode||state.mode, template=override.template||state.template, imgs=override.images||state.images;
+    if(mode==='upload'){ctx.fillStyle='#fff';ctx.fillRect(0,0,WIDTH,HEIGHT);if(imgs.background)drawImageCover(ctx,imgs.background,0,0,WIDTH,HEIGHT,opt.fit==='contain');else drawMissingBackground(ctx);}
+    else drawTemplate(ctx,template);
+    if(imgs.logo){ctx.save();drawImageCover(ctx,imgs.logo,68,72,115,105,true);ctx.restore();}
+    if(opt.vis.institution&&opt.institution){setText(ctx,'700 23px Arial','#405266');centerFit(ctx,opt.institution,600,151,810,23,15);}
+    if(opt.vis.title&&opt.title){setText(ctx,'bold 47px Georgia','#193b55');centerFit(ctx,opt.title,600,266,1060,47,24);}
+    if(opt.vis.intro&&opt.intro){setText(ctx,'24px Arial','#50657a');centerFit(ctx,opt.intro,600,344,1010,24,16);}
+    const actualName=(name||'Tu nombre aquí').trim();
+    const nameLines=wrapText(ctx,actualName,920,Math.max(40,opt.size),opt.font,2);
+    const nameSize=nameLines.fontSize;
+    if(opt.plate){ctx.save();ctx.fillStyle='rgba(255,255,255,.87)';roundRect(ctx,130,opt.nameY-(nameLines.lines.length===1?71:110),940,nameLines.lines.length===1?130:185,16);ctx.fill();ctx.restore();}
+    ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle=opt.color;ctx.font='bold '+nameSize+'px '+opt.font;
+    const spacing=nameSize*1.17;const nameStart=opt.nameY-((nameLines.lines.length-1)*spacing)/2;
+    nameLines.lines.forEach((line,i)=>ctx.fillText(line,600,nameStart+i*spacing));
+    if(opt.vis.description&&opt.description){setText(ctx,'24px Arial','#384e65');multiCenter(ctx,opt.description,600,545,995,24,2,31);}
+    if(opt.vis.date&&opt.date){setText(ctx,'20px Arial','#50657a');centerFit(ctx,opt.date,600,627,880,20,14);}
+    if(opt.vis.signatures){const left=340,right=860;
+      for(const [x,img,caption] of [[left,imgs.signature1,opt.signer1],[right,imgs.signature2,opt.signer2]]){
+        if(img)drawImageCover(ctx,img,x-105,642,210,67,true);
+        ctx.beginPath();ctx.moveTo(x-130,730);ctx.lineTo(x+130,730);ctx.strokeStyle='#6d7e8d';ctx.lineWidth=1.5;ctx.stroke();
+        if(caption){setText(ctx,'19px Arial','#405367');centerFit(ctx,caption,x,762,280,19,13);}
+      }
+    }
+    ctx.restore();
+  }
+  function setText(ctx,font,color){ctx.font=font;ctx.fillStyle=color;ctx.textAlign='center';ctx.textBaseline='middle';}
+  function centerFit(ctx,text,x,y,width,initialSize,minSize){let size=initialSize;const family=ctx.font.includes('Georgia')?'Georgia':'Arial',weight=ctx.font.startsWith('bold')||ctx.font.startsWith('700')?'bold ':'';
+    while(size>minSize){ctx.font=weight+size+'px '+family;if(ctx.measureText(text).width<=width)break;size-=1;}
+    ctx.fillText(text,x,y,width);
+  }
+  function wrapText(ctx,text,maxWidth,initial,font,maxLines){let size=initial,lines=[];const words=text.replace(/\s+/g,' ').trim().split(' ');
+    do{ctx.font='bold '+size+'px '+font;lines=[];let line='';for(const word of words){const next=line?line+' '+word:word;if(ctx.measureText(next).width>maxWidth&&line){lines.push(line);line=word;}else line=next;}if(line)lines.push(line);if(lines.length<=maxLines&&lines.every(l=>ctx.measureText(l).width<=maxWidth))break;size-=2;}
+    while(size>=34);
+    if(lines.length>maxLines){lines=lines.slice(0,maxLines);let final=lines[maxLines-1];while(ctx.measureText(final+'…').width>maxWidth&&final.length>0)final=final.slice(0,-1);lines[maxLines-1]=final+'…';}
+    return {lines,fontSize:size};
+  }
+  function multiCenter(ctx,text,x,y,maxWidth,size,maxLines,lineGap){const pieces=text.replace(/\s+/g,' ').trim().split(' ');let lines=[],current='';
+    ctx.font=size+'px Arial';for(const w of pieces){const next=current?current+' '+w:w;if(ctx.measureText(next).width>maxWidth&&current){lines.push(current);current=w;}else current=next;}if(current)lines.push(current);
+    if(lines.length>maxLines){const newLines=lines.slice(0,maxLines);const remainder=lines.slice(maxLines-1).join(' ');let t=remainder;while(ctx.measureText(t+'…').width>maxWidth&&t.length)t=t.slice(0,-1);newLines[maxLines-1]=t+'…';lines=newLines;}
+    ctx.textAlign='center';ctx.textBaseline='middle';const top=y-(lines.length-1)*lineGap/2;lines.forEach((line,i)=>ctx.fillText(line,x,top+i*lineGap,maxWidth));
+  }
+  function drawImageCover(ctx,img,x,y,w,h,contain=false){const ratio=contain?Math.min(w/img.width,h/img.height):Math.max(w/img.width,h/img.height);const iw=img.width*ratio,ih=img.height*ratio;ctx.drawImage(img,x+(w-iw)/2,y+(h-ih)/2,iw,ih);}
+  function roundRect(ctx,x,y,w,h,r){r=Math.min(r,w/2,h/2);ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
+  function drawMissingBackground(ctx){ctx.fillStyle='#fff';ctx.fillRect(0,0,WIDTH,HEIGHT);ctx.strokeStyle='#cbdce2';ctx.lineWidth=7;ctx.setLineDash([18,16]);ctx.strokeRect(16,16,WIDTH-32,HEIGHT-32);ctx.setLineDash([]);setText(ctx,'28px Arial','#9fb1ba');ctx.fillText('Subí tu diseño para comenzar',600,110);}
+  function drawTemplate(ctx,id){
+    if(id==='institucional'){
+      ctx.fillStyle='#fffdf7';ctx.fillRect(0,0,WIDTH,HEIGHT);
+      ctx.strokeStyle='#ac8650';ctx.lineWidth=9;ctx.strokeRect(24,24,WIDTH-48,HEIGHT-48);
+      ctx.strokeStyle='#d6be8b';ctx.lineWidth=2;ctx.strokeRect(42,42,WIDTH-84,HEIGHT-84);
+      ctx.fillStyle='#f8f1e1';ctx.beginPath();ctx.arc(600,404,240,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#bd9c5d';ctx.beginPath();ctx.arc(600,91,31,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#fffdf7';ctx.font='bold 24px Georgia';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('★',600,92);
+      ctx.strokeStyle='#b9995b';ctx.lineWidth=1.5;for(const xx of [110,1090]){ctx.beginPath();ctx.moveTo(xx,220);ctx.lineTo(xx,630);ctx.stroke();}
+    }else if(id==='voleibol'){
+      const gr=ctx.createLinearGradient(0,0,WIDTH,HEIGHT);gr.addColorStop(0,'#e6f6ff');gr.addColorStop(1,'#fcfeff');ctx.fillStyle=gr;ctx.fillRect(0,0,WIDTH,HEIGHT);
+      ctx.fillStyle='#115784';ctx.fillRect(0,0,WIDTH,78);
+      ctx.fillStyle='#f0aa40';ctx.fillRect(0,77,WIDTH,9);
+      ctx.fillStyle='rgba(58,155,194,.12)';ctx.beginPath();ctx.arc(40,760,300,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.arc(1190,760,310,0,Math.PI*2);ctx.fill();
+      ctx.strokeStyle='#47a9c1';ctx.lineWidth=8;ctx.strokeRect(28,115,1144,695);
+      drawVolleyball(ctx,1038,187,68);
+      ctx.fillStyle='#0a6583';for(let i=0;i<6;i++){roundRect(ctx,160+i*165,790,115,6,3);ctx.fill();}
+    }else if(id==='futbol'){
+      ctx.fillStyle='#f3fff8';ctx.fillRect(0,0,WIDTH,HEIGHT);ctx.fillStyle='#147456';ctx.fillRect(0,0,WIDTH,80);
+      ctx.fillStyle='#badfcf';ctx.fillRect(0,795,WIDTH,53);
+      ctx.lineWidth=3;ctx.strokeStyle='#7cba9e';ctx.strokeRect(25,110,1150,658);
+      ctx.globalAlpha=.14;ctx.strokeStyle='#21734e';ctx.lineWidth=12;ctx.beginPath();ctx.arc(600,430,270,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=1;
+      drawFootball(ctx,1064,183,76);
+      ctx.fillStyle='#e8f8ee';ctx.beginPath();ctx.moveTo(0,80);ctx.lineTo(180,80);ctx.lineTo(0,300);ctx.closePath();ctx.fill();
+    }else{
+      ctx.fillStyle='#fcfbff';ctx.fillRect(0,0,WIDTH,HEIGHT);
+      ctx.fillStyle='#59459a';ctx.fillRect(0,0,WIDTH,87);ctx.fillStyle='#f5bd62';ctx.fillRect(0,87,WIDTH,8);
+      ctx.fillStyle='#ece7ff';ctx.beginPath();ctx.arc(120,650,240,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(1140,210,210,0,Math.PI*2);ctx.fill();
+      ctx.strokeStyle='#9d8bcf';ctx.lineWidth=5;ctx.strokeRect(27,115,1146,692);
+      for(const [x,y,r] of [[144,212,21],[1032,195,28],[171,687,18],[990,700,14]])star(ctx,x,y,r,'#ecaa42');
+      ctx.fillStyle='#d4c7f6';ctx.beginPath();ctx.ellipse(1070,750,100,35,-.3,0,Math.PI*2);ctx.fill();
+    }
+  }
+  function star(ctx,x,y,r,color){ctx.save();ctx.translate(x,y);ctx.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,d=i%2?r*.45:r;ctx.lineTo(Math.cos(a)*d,Math.sin(a)*d);}ctx.closePath();ctx.fillStyle=color;ctx.fill();ctx.restore();}
+  function drawVolleyball(ctx,x,y,r){ctx.save();ctx.translate(x,y);ctx.fillStyle='#fff8eb';ctx.strokeStyle='#d98431';ctx.lineWidth=5;ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.save();ctx.beginPath();ctx.arc(0,0,r-2,0,Math.PI*2);ctx.clip();ctx.strokeStyle='#efaa43';ctx.lineWidth=6;for(let a=0;a<6;a++){ctx.save();ctx.rotate(a*Math.PI/3);ctx.beginPath();ctx.moveTo(-r,0);ctx.quadraticCurveTo(0,-r*.7,r,0);ctx.stroke();ctx.restore();}ctx.restore();ctx.restore();}
+  function drawFootball(ctx,x,y,r){ctx.save();ctx.translate(x,y);ctx.fillStyle='#fff';ctx.strokeStyle='#396a55';ctx.lineWidth=4;ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle='#1d624c';ctx.beginPath();for(let i=0;i<5;i++){const a=-Math.PI/2+i*2*Math.PI/5;ctx.lineTo(Math.cos(a)*r*.34,Math.sin(a)*r*.34);}ctx.closePath();ctx.fill();for(let i=0;i<5;i++){const a=-Math.PI/2+i*2*Math.PI/5;const a2=-Math.PI/2+(i+.5)*2*Math.PI/5;ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.34,Math.sin(a)*r*.34);ctx.lineTo(Math.cos(a2)*r*.94,Math.sin(a2)*r*.94);ctx.lineWidth=4;ctx.stroke();}ctx.restore();}
+  function makeThumbnail(id){const btn=document.querySelector('[data-template="'+id+'"]');const c=btn.querySelector('canvas');const opts={...inputs(),title:templateDefaults[id].title,intro:templateDefaults[id].intro,description:templateDefaults[id].description,vis:Object.fromEntries(visKeys.map(k=>[k,k!=='signatures']))};drawCanvas(c,'Sofía Martínez',opts,{mode:'template',template:id,images:{}});}
+  function safeFilename(name){return name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9 _-]/g,'').trim().replace(/\s+/g,'-').toLowerCase().slice(0,60)||'participante';}
+  function exportCanvas(name){const c=document.createElement('canvas');c.width=2400;c.height=1696;drawCanvas(c,name,inputs());return c;}
+  // PDF A4 horizontal de una página, con el diploma renderizado en JPEG.
+  // Implementación local: no requiere servicios web ni bibliotecas externas.
+  function pdfFromJpeg(jpegBytes, imgWidth, imgHeight){
+    const enc=new TextEncoder(),chunks=[],offsets=[0];let length=0;
+    const bytes=part=>{chunks.push(part);length+=part.length;};
+    const write=text=>bytes(enc.encode(text));
+    const begin=n=>{offsets[n]=length;write(n+' 0 obj\n');};
+    write('%PDF-1.4\n%Diploma\n');
+    begin(1);write('<< /Type /Catalog /Pages 2 0 R >>\nendobj\n');
+    begin(2);write('<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n');
+    begin(3);write('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 841.89 595.28] /Resources << /XObject << /Im0 5 0 R >> >> /Contents 4 0 R >>\nendobj\n');
+    const content='q\n841.89 0 0 595.28 0 0 cm\n/Im0 Do\nQ\n';
+    begin(4);write('<< /Length '+enc.encode(content).length+' >>\nstream\n'+content+'endstream\nendobj\n');
+    begin(5);write('<< /Type /XObject /Subtype /Image /Width '+imgWidth+' /Height '+imgHeight+' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length '+jpegBytes.length+' >>\nstream\n');
+    bytes(jpegBytes);write('\nendstream\nendobj\n');
+    const xrefStart=length;write('xref\n0 6\n0000000000 65535 f \n');
+    for(let i=1;i<=5;i++)write(String(offsets[i]).padStart(10,'0')+' 00000 n \n');
+    write('trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n'+xrefStart+'\n%%EOF\n');
+    return new Blob(chunks,{type:'application/pdf'});
+  }
+  async function pdfForName(canvas,name,opts,snapshot){
+    drawCanvas(canvas,name,opts,snapshot);
+    const jpeg=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('No se pudo generar el diploma.')),'image/jpeg',.93));
+    return pdfFromJpeg(new Uint8Array(await jpeg.arrayBuffer()),canvas.width,canvas.height);
+  }
+  function saveBlob(blob,filename){
+    const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;
+    document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
+  }
+  // ZIP sin compresión adicional. Los PDFs ya contienen imágenes JPEG comprimidas.
+  const crcTable=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let j=0;j<8;j++)c=(c&1)?0xedb88320^(c>>>1):c>>>1;t[n]=c>>>0;}return t;})();
+  function crc32(data){let c=0xffffffff;for(const byte of data)c=crcTable[(c^byte)&255]^(c>>>8);return(c^0xffffffff)>>>0;}
+  function zipBuilder(){
+    const enc=new TextEncoder(),parts=[],central=[];let offset=0;
+    const now=new Date(),year=Math.min(2107,Math.max(1980,now.getFullYear()));
+    const dosDate=((year-1980)<<9)|((now.getMonth()+1)<<5)|now.getDate();
+    const dosTime=(now.getHours()<<11)|(now.getMinutes()<<5)|Math.floor(now.getSeconds()/2);
+    return {
+      async add(filename,blob){
+        const data=new Uint8Array(await blob.arrayBuffer()),name=enc.encode(filename),crc=crc32(data);
+        const local=new Uint8Array(30+name.length),lv=new DataView(local.buffer);
+        lv.setUint32(0,0x04034b50,true);lv.setUint16(4,20,true);
+        lv.setUint16(10,dosTime,true);lv.setUint16(12,dosDate,true);
+        lv.setUint32(14,crc,true);lv.setUint32(18,data.length,true);lv.setUint32(22,data.length,true);
+        lv.setUint16(26,name.length,true);local.set(name,30);
+        const dir=new Uint8Array(46+name.length),dv=new DataView(dir.buffer);
+        dv.setUint32(0,0x02014b50,true);dv.setUint16(4,20,true);dv.setUint16(6,20,true);
+        dv.setUint16(12,dosTime,true);dv.setUint16(14,dosDate,true);
+        dv.setUint32(16,crc,true);dv.setUint32(20,data.length,true);dv.setUint32(24,data.length,true);
+        dv.setUint16(28,name.length,true);dv.setUint32(42,offset,true);dir.set(name,46);
+        parts.push(local,data);central.push(dir);offset+=local.length+data.length;
+      },
+      finish(){
+        const dirSize=central.reduce((n,a)=>n+a.length,0),end=new Uint8Array(22),dv=new DataView(end.buffer);
+        dv.setUint32(0,0x06054b50,true);dv.setUint16(8,central.length,true);dv.setUint16(10,central.length,true);
+        dv.setUint32(12,dirSize,true);dv.setUint32(16,offset,true);
+        return new Blob([...parts,...central,end],{type:'application/zip'});
+      }
+    };
+  }
+  async function downloadPdfIndividual(){
+    const name=getNames()[state.nameIndex];if(!name||state.busy)return;
+    if(state.mode==='upload'&&!state.images.background){setStatus('Primero tenés que subir un diseño.',true);return;}
+    state.busy=true;syncState();setStatus('Preparando PDF individual…');
+    try{
+      const c=document.createElement('canvas');c.width=2400;c.height=1696;
+      const pdf=await pdfForName(c,name,inputs(),{mode:state.mode,template:state.template,images:{...state.images}});
+      saveBlob(pdf,'diploma-'+safeFilename(name)+'.pdf');
+      setStatus('PDF individual de «'+name+'» descargado. Podés enviarlo por WhatsApp.');
+    }catch(err){setStatus('No se pudo preparar el PDF: '+err.message,true);}
+    finally{state.busy=false;syncState();}
+  }
+  async function downloadPdfZip(){
+    const names=getNames();if(!names.length||names.length>MAX_NAMES||state.busy)return;
+    if(state.mode==='upload'&&!state.images.background){setStatus('Primero tenés que subir un diseño.',true);return;}
+    state.busy=true;syncState();setStatus('Preparando '+names.length+' PDF individuales…');
+    $('progress-track').classList.add('visible');$('progress-bar').style.width='0%';
+    try{
+      const opts=inputs(),snapshot={mode:state.mode,template:state.template,images:{...state.images}};
+      const canvas=document.createElement('canvas');canvas.width=2400;canvas.height=1696;
+      const zip=zipBuilder();
+      for(let i=0;i<names.length;i++){
+        const pdf=await pdfForName(canvas,names[i],opts,snapshot);
+        const filename=String(i+1).padStart(3,'0')+'-diploma-'+safeFilename(names[i])+'.pdf';
+        await zip.add(filename,pdf);
+        $('progress-bar').style.width=Math.round(100*(i+1)/names.length)+'%';
+        if(i%5===4)setStatus('Preparados '+(i+1)+' de '+names.length+' diplomas…');
+      }
+      saveBlob(zip.finish(),'diplomas-individuales.zip');
+      setStatus('ZIP descargado: contiene '+names.length+' PDF individual'+(names.length===1?'':'es')+'. Extraelo para enviarlos por separado.');
+    }catch(err){setStatus('No se pudieron crear los PDFs individuales: '+err.message,true);}
+    finally{state.busy=false;$('progress-track').classList.remove('visible');syncState();}
+  }
+  async function downloadImage(){const name=getNames()[state.nameIndex];if(!name)return;try{const canvas=exportCanvas(name);const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!blob)throw Error('No se pudo crear la imagen');const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='diploma-'+safeFilename(name)+'.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),2500);setStatus('Imagen del diploma preparada para descargar.');}catch(e){setStatus('Ocurrió un problema al crear la imagen: '+e.message,true);}}
+  async function printDiplomas(){const names=getNames();if(!names.length||names.length>MAX_NAMES||state.busy)return;if(state.mode==='upload'&&!state.images.background){setStatus('Primero tenés que subir un diseño.',true);return;}
+    state.busy=true;setStatus('Preparando '+names.length+' diploma'+(names.length===1?'':'s')+' para imprimir o guardar en PDF…');$('progress-track').classList.add('visible');$('progress-bar').style.width='0%';syncState();
+    try{
+      const root=$('print-root');root.replaceChildren();const canvas=document.createElement('canvas');canvas.width=2400;canvas.height=1696;
+      const opts=inputs();
+      for(let i=0;i<names.length;i++){
+        drawCanvas(canvas,names[i],opts);const page=document.createElement('div');page.className='print-page';const img=document.createElement('img');img.alt='Diploma de '+names[i];img.src=canvas.toDataURL('image/jpeg',.94);page.append(img);root.append(page);
+        $('progress-bar').style.width=Math.round(100*(i+1)/names.length)+'%';if(i%5===4)await new Promise(resolve=>requestAnimationFrame(resolve));
+      }
+      await Promise.all(Array.from(root.querySelectorAll('img'),img=>img.decode?img.decode().catch(()=>{}):Promise.resolve()));
+      setStatus('Diplomas preparados. En la impresión, seleccioná «Guardar como PDF» y papel A4 horizontal.');
+      window.print();
+    }catch(err){setStatus('No se pudieron preparar los diplomas: '+err.message,true);}
+    finally{state.busy=false;$('progress-track').classList.remove('visible');syncState();}
+  }
+  function resetApp(){if(!confirm('¿Querés reiniciar los datos, las imágenes y los nombres de esta sesión?'))return;
+    state.images={background:null,logo:null,signature1:null,signature2:null};state.nameIndex=0;
+    for(const [id,value] of Object.entries(initial)){$(id).type==='checkbox'?$(id).checked=value:$(id).value=value;}
+    for(const k of visKeys)document.querySelector('[data-visibility="'+k+'"]').checked=true;
+    for(const id of ['background-file','logo-file','signature1-file','signature2-file'])$(id).value='';
+    state.template='voleibol';document.querySelectorAll('.template-btn').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.template==='voleibol')));
+    $('print-root').replaceChildren();setMode('template');setStatus('Se reinició la edición.');
+  }
+  $('mode-template').addEventListener('click',()=>setMode('template'));
+  $('mode-upload').addEventListener('click',()=>setMode('upload'));
+  document.querySelectorAll('.template-btn').forEach(b=>b.addEventListener('click',()=>chooseTemplate(b.dataset.template)));
+  for(const id of inputIds){$(id).addEventListener('input',()=>{setStatus('');syncState();});$(id).addEventListener('change',syncState);}
+  for(const k of visKeys)document.querySelector('[data-visibility="'+k+'"]').addEventListener('change',syncState);
+  $('names').addEventListener('input',()=>{setStatus('');syncState();});
+  $('preview-person').addEventListener('change',()=>{state.nameIndex=Number($('preview-person').value)||0;scheduleRender();});
+  for(const id of ['background-file','logo-file','signature1-file','signature2-file'])$(id).addEventListener('change',e=>loadImage(id,e.target.files?.[0]));
+  document.querySelectorAll('[data-clear]').forEach(b=>b.addEventListener('click',()=>{const k=b.dataset.clear;state.images[k]=null;$(k==='logo'?'logo-file':k+'-file').value='';setStatus('Imagen quitada.');syncState();}));
+  $('png-btn').addEventListener('click',downloadImage);
+  $('print-btn').addEventListener('click',printDiplomas);
+  $('pdf-one-btn').addEventListener('click',downloadPdfIndividual);
+  $('pdf-zip-btn').addEventListener('click',downloadPdfZip);
+  $('reset-btn').addEventListener('click',resetApp);
+  for(const id of Object.keys(templateDefaults))makeThumbnail(id);
+  syncState();
+})();
+</script>
+</body>
+</html>
